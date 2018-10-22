@@ -3,12 +3,14 @@ package com.cryptobot.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
-public class KafkaConfig {
+@EnableScheduling
+public class AppConfig {
 
     @Bean(name = "kafkaProperties")
     public Properties kafkaProperties() throws IOException {
@@ -16,7 +18,7 @@ public class KafkaConfig {
         properties.load(new ClassPathResource("kafka.properties").getInputStream());
         properties.put("bootstrap.servers", System.getenv("CLOUDKARAFKA_BROKERS"));
         properties.put("sasl.jaas.config", getJaas());
-        properties.put("topic", System.getenv("CLOUDKARAFKA_USERNAME") + properties.getProperty("group.id"));
+        properties.put("topic", System.getenv("CLOUDKARAFKA_USERNAME") + "-"+properties.getProperty("group.id"));
         return properties;
     }
 

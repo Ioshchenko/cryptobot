@@ -1,4 +1,4 @@
-#Crypto bot.
+# Crypto bot.
 
 Pet project for tracking changing prices of crypto currencies.
 
