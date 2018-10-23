@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @RestController
 public class InfoController {
-   @Autowired
-   private ExmoConsumer consumer;
+
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @RequestMapping("/")
     public String info() {
@@ -17,8 +20,8 @@ public class InfoController {
     }
 
     @RequestMapping("/exmo")
-    public String exmo(){
-        consumer.poll();
+    public String exmo() {
+        //
         return "Start consumer";
     }
 

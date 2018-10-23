@@ -1,38 +1,33 @@
 package com.cryptobot.kafka;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.Properties;
+import java.util.Map;
 
 @Component
+@Log4j2
 public class ExmoProducer {
 
     private static final String URL = "https://api.exmo.com/v1/ticker/";
+    @Autowired
+    private KafkaTemplate<String, Map<String, String>> kafkaTemplate;
 
-    @Resource(name = "kafkaProperties")
-    private Properties kafkaProperties;
-    private Producer<String, String> producer;
+    @Resource(name = "topic")
+    private String topic;
 
-    @PostConstruct
-    private void init() {
-        producer = new KafkaProducer<>(kafkaProperties);
-    }
 
     @Scheduled(fixedRate = 1000)
-    public void pullTiker() {
+    public void loadData() {
         RestTemplate restTemplate = new RestTemplate();
-        producer.send(
-                new ProducerRecord<>(
-                        kafkaProperties.getProperty("topic"),
-                        "exmo_ticker",
-                        restTemplate.getForObject(URL, String.class)));
+        Map<String, Map<String, String>> tikers = restTemplate.getForObject(URL, Map.class);
+        Map<String, String> btcUsd = tikers.get("BTC_USD");
+        kafkaTemplate.send(topic, btcUsd);
     }
 
 }
