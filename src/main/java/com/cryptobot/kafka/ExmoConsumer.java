@@ -17,7 +17,6 @@ public class ExmoConsumer {
 
     @KafkaListener(topics = "#{topic.toString()}")
     public void listen(Map<String, String> value) {
-        log.info(value);
         template.convertAndSend("/topic/greetings", value);
     }
 }
