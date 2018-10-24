@@ -1,3 +1,7 @@
 kafka:
   topic: exmo
   group: exmo
+spring:
+  mvc:
+    view:
+      suffix: .html
