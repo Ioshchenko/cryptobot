@@ -1,5 +1,5 @@
 kafka:
-  topic: exmo
+  topic: exchange
   group: exmo
 spring:
   mvc:

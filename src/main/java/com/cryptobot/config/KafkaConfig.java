@@ -1,5 +1,6 @@
 package com.cryptobot.config;
 
+import com.cryptobot.kafka.dto.Ticker;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -35,14 +36,14 @@ public class KafkaConfig {
 
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Ticker> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Ticker> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<Integer, String> consumerFactory() {
+    public ConsumerFactory<String, Ticker> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
@@ -59,17 +60,18 @@ public class KafkaConfig {
         props.put("security.protocol", "SASL_SSL");
         props.put("sasl.mechanism", "SCRAM-SHA-256");
         props.put("sasl.jaas.config", getJaas());
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.cryptobot.kafka.dto");
         return props;
 
     }
 
     @Bean
-    public KafkaTemplate<String, Map<String, String>> kafkaTemplate() {
+    public KafkaTemplate<String, Ticker> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, Map<String, String>> producerFactory() {
+    public ProducerFactory<String, Ticker> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 

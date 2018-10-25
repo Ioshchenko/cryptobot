@@ -16,7 +16,7 @@
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
+            <table id="table_info" class="table table-striped">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -28,7 +28,12 @@
                     <tr>
                         <th scope="row">1</th>
                         <td>Exmo</td>
-                        <td id="buy_price"></td>
+                        <td class="exmo"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Bitfinaex</td>
+                        <td class="bitfinex"></td>
                     </tr>
                 </tbody>
             </table>
@@ -45,14 +50,15 @@ $(document).ready(function(){
         var socket = new SockJS('/gs-guide-websocket');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/greetings', function (greeting) {
-                show(JSON.parse(greeting.body).buy_price);
+            stompClient.subscribe('/topic/greetings', function (mes) {
+                show(JSON.parse(mes.body));
             });
         });
     }
 
-    function show(message) {
-        $("#buy_price").text(message);
+    function show(ticker) {
+        var el ="."+ticker.exchange
+        $(el).text(ticker.buyPrice);
     }
 
     connect();
