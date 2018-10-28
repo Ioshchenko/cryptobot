@@ -18,6 +18,9 @@ public class ExmoProducer {
     @Autowired
     private KafkaTemplate<String, Ticker> kafkaTemplate;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Resource(name = "topic")
     private String topic;
 
@@ -28,7 +31,6 @@ public class ExmoProducer {
     }
 
     private Ticker getTicker(String pair) {
-        RestTemplate restTemplate = new RestTemplate();
         Map<String, Map<String, String>> tikers = restTemplate.getForObject(URL, Map.class);
         Ticker ticker = convert(tikers.get(pair));
         return ticker;

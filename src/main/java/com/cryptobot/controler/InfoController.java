@@ -1,4 +1,4 @@
-package com.cryptobot.info;
+package com.cryptobot.controler;
 
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +11,5 @@ public class InfoController {
     public String info() {
         return "index";
     }
-
 
 }

@@ -19,6 +19,9 @@ public class BitfinexProducer {
     @Autowired
     private KafkaTemplate<String, Ticker> kafkaTemplate;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Resource(name = "topic")
     private String topic;
 
@@ -30,7 +33,6 @@ public class BitfinexProducer {
     }
 
     public Ticker getTicker(String pair) {
-        RestTemplate restTemplate = new RestTemplate();
         List<List<String>> tikers = restTemplate.getForObject(URL, List.class);
         return convert(getTicker(pair, tikers));
     }
