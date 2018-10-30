@@ -1,6 +1,6 @@
 kafka:
-  topic: exchange
-  group: exmo
+  topic: demo
+  group: exchanges
 spring:
   mvc:
     view:

@@ -1,6 +1,6 @@
 package com.cryptobot.config;
 
-import com.cryptobot.kafka.dto.Ticker;
+import com.cryptobot.model.Ticker;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -15,6 +15,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -34,14 +35,14 @@ public class KafkaConfig {
 
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Ticker> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Ticker> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, List<Ticker>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, List<Ticker>> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, Ticker> consumerFactory() {
+    public ConsumerFactory<String, List<Ticker>> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
@@ -64,12 +65,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Ticker> kafkaTemplate() {
+    public KafkaTemplate<String, List<Ticker>> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, Ticker> producerFactory() {
+    public ProducerFactory<String, List<Ticker>> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 

@@ -1,6 +1,7 @@
 package com.cryptobot.kafka.producer;
 
-import com.cryptobot.kafka.dto.Ticker;
+import com.cryptobot.service.ExchangeService;
+import com.cryptobot.model.Ticker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,16 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
-
-import static com.cryptobot.kafka.Exchange.Bitfinex.Pair.BTC_USD;
-import static com.cryptobot.kafka.Exchange.Bitfinex.URL;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class BitfinexProducer {
+    private static final String EXCHANGE = "bitfinex";
     @Autowired
-    private KafkaTemplate<String, Ticker> kafkaTemplate;
+    private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -25,32 +25,37 @@ public class BitfinexProducer {
     @Resource(name = "topic")
     private String topic;
 
+    @Autowired
+    private ExchangeService exchangeService;
+
 
     @Scheduled(fixedRate = 6000)
     public void loadData() {
-        Ticker ticker = getTicker(BTC_USD);
-        kafkaTemplate.send(topic, ticker);
+        kafkaTemplate.send(topic, getTickers());
+}
+
+    private List<Ticker> getTickers() {
+        String path = "/tickers?symbols=ALL";
+        List<List<String>> data = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + path, List.class);
+        return getExchangeTickers(data);
     }
 
-    public Ticker getTicker(String pair) {
-        List<List<String>> tikers = restTemplate.getForObject(URL, List.class);
-        return convert(getTicker(pair, tikers));
-    }
+    private List<Ticker> getExchangeTickers(List<List<String>> data) {
+        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
 
-    private List getTicker(String pair, List<List<String>> tikers) {
-        return tikers.stream()
-                .filter(l -> l.contains(pair))
-                .findFirst()
-                .orElse(Collections.emptyList());
+        return data.stream()
+                .filter(l -> pairs.containsKey(l.get(0)))
+                .map(this::convert)
+                .collect(Collectors.toList());
     }
 
     private Ticker convert(List info) {
+        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
         Ticker ticker = new Ticker();
-        ticker.setPair(Ticker.BTC_USD);
-        ticker.setExchange("bitfinex");
-        if (!info.isEmpty()) {
-            ticker.setBuyPrice(info.get(1).toString());
-        }
+        ticker.setExchange(EXCHANGE);
+        ticker.setPair(pairs.get(info.get(0).toString()));
+        ticker.setBuyPrice(info.get(1).toString());
+
         return ticker;
     }
 

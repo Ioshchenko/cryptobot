@@ -1,6 +1,7 @@
 package com.cryptobot.kafka.producer;
 
-import com.cryptobot.kafka.dto.Ticker;
+import com.cryptobot.service.ExchangeService;
+import com.cryptobot.model.Ticker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,15 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
-
-import static com.cryptobot.kafka.Exchange.Exmo.Pair.BTC_USD;
-import static com.cryptobot.kafka.Exchange.Exmo.URL;
+import java.util.stream.Collectors;
 
 @Component
 public class ExmoProducer {
+    private static final String EXCHANGE = "exmo";
     @Autowired
-    private KafkaTemplate<String, Ticker> kafkaTemplate;
+    private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -24,23 +25,31 @@ public class ExmoProducer {
     @Resource(name = "topic")
     private String topic;
 
+    @Autowired
+    private ExchangeService exchangeService;
+
     @Scheduled(fixedRate = 1000)
     public void loadData() {
-        Ticker ticker = getTicker(BTC_USD);
-        kafkaTemplate.send(topic, ticker);
+        kafkaTemplate.send(topic, getTickers());
     }
 
-    private Ticker getTicker(String pair) {
-        Map<String, Map<String, String>> tikers = restTemplate.getForObject(URL, Map.class);
-        Ticker ticker = convert(tikers.get(pair));
-        return ticker;
+    private List<Ticker> getTickers() {
+        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
+
+        Map<String, Map<String, String>> tickers = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + "/ticker/", Map.class);
+        return tickers.entrySet().stream()
+                .filter(e -> pairs.containsKey(e.getKey()))
+                .map(e -> convert(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
     }
 
-    private Ticker convert(Map<String, String> info) {
+    private Ticker convert(String pair, Map<String, String> info) {
+        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
+
         Ticker ticker = new Ticker();
         ticker.setBuyPrice(info.get("buy_price"));
-        ticker.setExchange("exmo");
-        ticker.setPair(Ticker.BTC_USD);
+        ticker.setExchange(EXCHANGE);
+        ticker.setPair(pairs.get(pair));
         return ticker;
     }
 

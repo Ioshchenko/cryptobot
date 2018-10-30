@@ -1,6 +1,6 @@
-package com.cryptobot.telegram;
+package com.cryptobot.service;
 
-import com.cryptobot.telegram.dto.Response;
+import com.cryptobot.model.telegram.Response;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

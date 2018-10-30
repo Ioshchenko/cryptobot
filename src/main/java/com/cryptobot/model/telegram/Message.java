@@ -1,4 +1,4 @@
-package com.cryptobot.telegram.dto;
+package com.cryptobot.model.telegram;
 
 import lombok.Getter;
 import lombok.Setter;

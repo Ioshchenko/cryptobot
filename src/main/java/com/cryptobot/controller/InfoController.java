@@ -1,4 +1,4 @@
-package com.cryptobot.controler;
+package com.cryptobot.controller;
 
 
 import org.springframework.stereotype.Controller;
