@@ -17,9 +17,11 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -85,7 +87,7 @@ public class AppConfig implements SchedulingConfigurer {
 
     private Exchange convert(Resource resource) {
         try {
-            Config config = ConfigFactory.parseFile(resource.getFile());
+            Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream()));
             return Exchange.builder()
                     .name(config.getString("name"))
                     .url(config.getString("url"))
