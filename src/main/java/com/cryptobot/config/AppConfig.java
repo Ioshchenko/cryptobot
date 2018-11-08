@@ -17,12 +17,14 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.util.ResourceUtils;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -32,6 +34,13 @@ import java.util.stream.Stream;
 @Configuration
 @EnableScheduling
 public class AppConfig implements SchedulingConfigurer {
+
+    @Bean
+    public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+        FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
+        bean.setTemplateLoaderPath("classpath:/templates");
+        return bean;
+    }
 
     @Bean
     public ObjectMapper jacksonObjectMapper() {

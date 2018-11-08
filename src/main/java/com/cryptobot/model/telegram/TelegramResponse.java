@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Response {
+public class TelegramResponse {
     private boolean ok;
     List<UpdateEntity> result;
 }

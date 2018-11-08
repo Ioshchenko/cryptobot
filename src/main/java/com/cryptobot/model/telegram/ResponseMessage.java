@@ -7,7 +7,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class Message {
+public class ResponseMessage {
     private int messageId;
     private User from;
     private int date;
