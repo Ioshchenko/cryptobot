@@ -29,4 +29,10 @@ public class TradingService {
                 .map(e -> e.get(pair))
                 .collect(Collectors.toList());
     }
+
+    public boolean contaisPair(String pair) {
+        return pairs.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .anyMatch(e -> e.containsKey(pair));
+    }
 }

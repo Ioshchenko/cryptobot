@@ -1,5 +1,5 @@
-<b>${pair}</b>
+<b>${pair}:</b>
 <#list tickers as ticker>
-${ticker.exchange}:${ticker.buyPrice}
+${ticker.exchange}: ${ticker.buyPrice}
 </#list>
 
