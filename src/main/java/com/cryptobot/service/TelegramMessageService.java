@@ -25,7 +25,7 @@ public class TelegramMessageService {
 
 
     public String buildTextMessage(String command) {
-        if (command.equals("price")) {
+        if (command.equals("/price")) {
             return "Please input trading pair, for example, BTC_USD";
         }
         if (!tradingService.contaisPair(command)) {

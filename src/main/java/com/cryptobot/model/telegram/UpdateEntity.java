@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class UpdateEntity {
     private int updateId;
-    private ResponseMessage responseMessage;
+    private ResponseMessage message;
 }

@@ -1,6 +1,7 @@
 package com.cryptobot.controller;
 
 import com.cryptobot.model.telegram.RequestMessage;
+import com.cryptobot.model.telegram.ResponseMessage;
 import com.cryptobot.model.telegram.UpdateEntity;
 import com.cryptobot.service.TelegramMessageService;
 import com.cryptobot.service.TelegramService;
@@ -23,12 +24,15 @@ public class TelegramController {
     @PostMapping("/telegram")
     public ResponseEntity update(@RequestBody UpdateEntity entity) {
         log.info(entity);
-
-        RequestMessage message = new RequestMessage();
-        message.setChatId(entity.getResponseMessage().getChat().getId());
-        message.setReplyToMessageId(entity.getResponseMessage().getMessageId());
-        message.setText(messageService.buildTextMessage(entity.getResponseMessage().getText()));
-        telegramService.sendMessage(message);
+        ResponseMessage responseMessage = entity.getMessage();
+        if (responseMessage != null) {
+            RequestMessage message = new RequestMessage();
+            message.setChatId(responseMessage.getChat().getId());
+            message.setReplyToMessageId(responseMessage.getMessageId());
+            message.setText(messageService.buildTextMessage(responseMessage.getText()));
+            message.setParseMode("HTML");
+            telegramService.sendMessage(message);
+        }
 
         return ResponseEntity.ok().build();
     }
