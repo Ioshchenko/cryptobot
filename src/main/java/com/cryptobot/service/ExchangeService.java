@@ -2,7 +2,6 @@ package com.cryptobot.service;
 
 import com.cryptobot.model.Exchange;
 import lombok.Builder;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Map;

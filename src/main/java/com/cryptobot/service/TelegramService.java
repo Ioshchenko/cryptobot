@@ -1,6 +1,8 @@
 package com.cryptobot.service;
 
-import com.cryptobot.model.telegram.Response;
+import com.cryptobot.model.telegram.RequestMessage;
+import com.cryptobot.model.telegram.ResponseMessage;
+import com.cryptobot.model.telegram.TelegramResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,12 @@ public class TelegramService {
     private RestTemplate restTemplate;
 
     public void getUpdates() {
-        Response object = restTemplate.getForObject(URL + "/getUpdates", Response.class);
+        TelegramResponse object = restTemplate.getForObject(URL + "/getUpdates", TelegramResponse.class);
         log.info(object);
+    }
+
+    public void sendMessage(RequestMessage message) {
+        restTemplate.postForObject(URL + "/sendMessage", message, ResponseMessage.class);
     }
 
 }
