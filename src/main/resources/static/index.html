@@ -62,8 +62,8 @@ $(document).ready(function(){
             var exchanges =[];
             $.each(data, function(key, value) {
                 exchanges.push(key);
-                $.each(value.pairs, function(p1, p2){
-                    pairs.push(p2);
+                $.each(value, function(k, v){
+                    pairs.push(k);
                 });
             });
 

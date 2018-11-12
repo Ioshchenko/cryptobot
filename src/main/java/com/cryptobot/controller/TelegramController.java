@@ -29,7 +29,7 @@ public class TelegramController {
             RequestMessage message = new RequestMessage();
             message.setChatId(responseMessage.getChat().getId());
             message.setReplyToMessageId(responseMessage.getMessageId());
-            message.setText(messageService.buildTextMessage(responseMessage.getText()));
+            message.setText(messageService.buildTextMessage(responseMessage.getText().toUpperCase()));
             message.setParseMode("HTML");
             telegramService.sendMessage(message);
         }

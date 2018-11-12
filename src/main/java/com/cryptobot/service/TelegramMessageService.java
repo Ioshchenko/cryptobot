@@ -25,10 +25,10 @@ public class TelegramMessageService {
 
 
     public String buildTextMessage(String command) {
-        if (command.equals("/price")) {
+        if (command.equalsIgnoreCase("/price")) {
             return "Please input trading pair, for example, BTC_USD";
         }
-        if (!tradingService.contaisPair(command)) {
+        if (!tradingService.containsPair(command)) {
             return "Unfortunately, we not support this command";
         }
         return generateMessage(command);
@@ -39,8 +39,8 @@ public class TelegramMessageService {
         try {
             Template template = freemarkerConfig.getTemplate("pairs.ftl");
             Map<String, Object> data = new HashMap<>();
-            data.put("pair", command.toUpperCase());
-            data.put("tickers", tradingService.getTickersByPair(command.toUpperCase()));
+            data.put("pair", command);
+            data.put("tickers", tradingService.getTickersByPair(command));
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, data);
         } catch (TemplateException | IOException e) {
             log.error(e);

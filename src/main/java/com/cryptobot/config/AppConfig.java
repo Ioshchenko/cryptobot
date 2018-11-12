@@ -100,7 +100,6 @@ public class AppConfig implements SchedulingConfigurer {
             return Exchange.builder()
                     .name(config.getString("name"))
                     .url(config.getString("url"))
-                    .pairs(getPairs(config.getConfig("pairs")))
                     .build();
         } catch (IOException e) {
             log.error(e);

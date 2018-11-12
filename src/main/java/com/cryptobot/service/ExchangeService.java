@@ -14,10 +14,6 @@ public class ExchangeService {
         return Collections.unmodifiableMap(exchanges);
     }
 
-    public Map<String, String> getExchangePairs(String exchange) {
-        return getExchangeByName(exchange).getPairs();
-    }
-
     public String getExchangeUrl(String exchange) {
         return getExchangeByName(exchange).getUrl();
     }

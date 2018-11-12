@@ -3,6 +3,7 @@ package com.cryptobot.service;
 import com.cryptobot.model.Ticker;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +31,11 @@ public class TradingService {
                 .collect(Collectors.toList());
     }
 
-    public boolean contaisPair(String pair) {
+    public Map<String, Map<String, Ticker>> getPairs() {
+        return Collections.unmodifiableMap(pairs);
+    }
+
+    public boolean containsPair(String pair) {
         return pairs.entrySet().stream()
                 .map(Map.Entry::getValue)
                 .anyMatch(e -> e.containsKey(pair));

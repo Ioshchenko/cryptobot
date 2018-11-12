@@ -1,7 +1,7 @@
 package com.cryptobot.kafka.producer;
 
-import com.cryptobot.service.ExchangeService;
 import com.cryptobot.model.Ticker;
+import com.cryptobot.service.ExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,7 +31,7 @@ public class BitfinexProducer {
     @Scheduled(fixedRate = 6000)
     public void loadData() {
         kafkaTemplate.send(topic, getTickers());
-}
+    }
 
     private List<Ticker> getTickers() {
         String path = "/tickers?symbols=ALL";
@@ -41,22 +40,23 @@ public class BitfinexProducer {
     }
 
     private List<Ticker> getExchangeTickers(List<List<String>> data) {
-        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
-
         return data.stream()
-                .filter(l -> pairs.containsKey(l.get(0)))
                 .map(this::convert)
                 .collect(Collectors.toList());
     }
 
     private Ticker convert(List info) {
-        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
         Ticker ticker = new Ticker();
         ticker.setExchange(EXCHANGE);
-        ticker.setPair(pairs.get(info.get(0).toString()));
+        String pair = info.get(0).toString();
+        ticker.setPair(format(pair));
         ticker.setBuyPrice(info.get(1).toString());
 
         return ticker;
+    }
+
+    private String format(String pair) {
+        return pair.substring(1, 4) + "_" + pair.substring(4);
     }
 
 }

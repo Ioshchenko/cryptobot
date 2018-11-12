@@ -34,22 +34,18 @@ public class ExmoProducer {
     }
 
     private List<Ticker> getTickers() {
-        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
 
         Map<String, Map<String, String>> tickers = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + "/ticker/", Map.class);
         return tickers.entrySet().stream()
-                .filter(e -> pairs.containsKey(e.getKey()))
                 .map(e -> convert(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
 
     private Ticker convert(String pair, Map<String, String> info) {
-        Map<String, String> pairs = exchangeService.getExchangePairs(EXCHANGE);
-
         Ticker ticker = new Ticker();
         ticker.setBuyPrice(info.get("buy_price"));
         ticker.setExchange(EXCHANGE);
-        ticker.setPair(pairs.get(pair));
+        ticker.setPair(pair);
         return ticker;
     }
 
