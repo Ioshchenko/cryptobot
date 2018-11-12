@@ -27,6 +27,7 @@ public class TradingService {
     public List<Ticker> getTickersByPair(String pair) {
         return pairs.entrySet().stream()
                 .map(Map.Entry::getValue)
+                .filter(e -> e.containsKey(pair))
                 .map(e -> e.get(pair))
                 .collect(Collectors.toList());
     }
