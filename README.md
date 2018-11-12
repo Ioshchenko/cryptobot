@@ -9,6 +9,7 @@ Telegram bot: [@CryptoAtlasBot](https://t.me/CryptoAtlasBot)
 ### Exchanges:
 - EXMO
 - Bitfinex
+- Binance
 
 ### Stack:
  - OpenShift hosting.
