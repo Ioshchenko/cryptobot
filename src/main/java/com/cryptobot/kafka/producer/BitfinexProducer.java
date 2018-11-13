@@ -50,7 +50,7 @@ public class BitfinexProducer {
         ticker.setExchange(EXCHANGE);
         String pair = info.get(0).toString();
         ticker.setPair(format(pair));
-        ticker.setBuyPrice(info.get(1).toString());
+        ticker.setBuyPrice(PriceFormat.format(info.get(1).toString()));
 
         return ticker;
     }

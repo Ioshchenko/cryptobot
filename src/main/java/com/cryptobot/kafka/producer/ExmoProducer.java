@@ -43,7 +43,7 @@ public class ExmoProducer {
 
     private Ticker convert(String pair, Map<String, String> info) {
         Ticker ticker = new Ticker();
-        ticker.setBuyPrice(info.get("buy_price"));
+        ticker.setBuyPrice(PriceFormat.format(info.get("buy_price")));
         ticker.setExchange(EXCHANGE);
         ticker.setPair(pair);
         return ticker;

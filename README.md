@@ -6,6 +6,9 @@ Demo page  with real-time prices [link](https://bot-crypto-bot.a3c1.starter-us-w
 
 Telegram bot: [@CryptoAtlasBot](https://t.me/CryptoAtlasBot)
 
+### List of Telegram commands:
+- `price` - show the current price for a trading pair. Example: BTC_USD
+
 ### Exchanges:
 - EXMO
 - Bitfinex

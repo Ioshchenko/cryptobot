@@ -44,7 +44,7 @@ public class BinanceProducer {
 
     private Ticker convert(Map<String, String> info) {
         Ticker ticker = new Ticker();
-        ticker.setBuyPrice(info.get("price"));
+        ticker.setBuyPrice(PriceFormat.format(info.get("price")));
         ticker.setExchange(EXCHANGE);
         ticker.setPair(format(info.get("symbol")));
         return ticker;
