@@ -29,7 +29,7 @@ public class BinanceProducer {
     @Autowired
     private ExchangeService exchangeService;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 2000)
     public void loadData() {
         kafkaTemplate.send(topic, getTickers());
     }

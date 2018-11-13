@@ -41,6 +41,7 @@ public class BitfinexProducer {
 
     private List<Ticker> getExchangeTickers(List<List<String>> data) {
         return data.stream()
+                .filter(i -> i.get(0).length() > 6)
                 .map(this::convert)
                 .collect(Collectors.toList());
     }
