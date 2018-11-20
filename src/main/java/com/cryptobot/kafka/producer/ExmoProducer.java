@@ -1,5 +1,6 @@
 package com.cryptobot.kafka.producer;
 
+import com.cryptobot.model.Exchange;
 import com.cryptobot.service.ExchangeService;
 import com.cryptobot.model.Ticker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ExmoProducer {
-    private static final String EXCHANGE = "exmo";
     @Autowired
     private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
@@ -34,8 +34,8 @@ public class ExmoProducer {
     }
 
     private List<Ticker> getTickers() {
-
-        Map<String, Map<String, String>> tickers = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + "/ticker/", Map.class);
+        String url = exchangeService.getExchangeUrl(Exchange.EXMO);
+        Map<String, Map<String, String>> tickers = restTemplate.getForObject(url + "/ticker/", Map.class);
         return tickers.entrySet().stream()
                 .map(e -> convert(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class ExmoProducer {
     private Ticker convert(String pair, Map<String, String> info) {
         Ticker ticker = new Ticker();
         ticker.setBuyPrice(PriceFormat.format(info.get("buy_price")));
-        ticker.setExchange(EXCHANGE);
+        ticker.setExchange(Exchange.EXMO);
         ticker.setPair(pair);
         return ticker;
     }

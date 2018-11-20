@@ -1,6 +1,6 @@
 package com.cryptobot.config;
 
-import com.cryptobot.model.Exchange;
+import com.cryptobot.model.ExchangeConfig;
 import com.cryptobot.service.ExchangeService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,10 +78,10 @@ public class AppConfig implements SchedulingConfigurer {
                 .build();
     }
 
-    private Map<String, Exchange> getExchanges() {
+    private Map<String, ExchangeConfig> getExchanges() {
         return Stream.of(getResources())
                 .map(this::convert)
-                .collect(Collectors.toMap(Exchange::getName, e -> e));
+                .collect(Collectors.toMap(ExchangeConfig::getName, e -> e));
     }
 
     private Resource[] getResources() {
@@ -94,10 +94,10 @@ public class AppConfig implements SchedulingConfigurer {
         }
     }
 
-    private Exchange convert(Resource resource) {
+    private ExchangeConfig convert(Resource resource) {
         try {
             Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream()));
-            return Exchange.builder()
+            return ExchangeConfig.builder()
                     .name(config.getString("name"))
                     .url(config.getString("url"))
                     .build();
@@ -106,11 +106,6 @@ public class AppConfig implements SchedulingConfigurer {
             throw new IllegalArgumentException("Error parsing config file");
         }
 
-    }
-
-    private static Map<String, String> getPairs(Config config) {
-        return config.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().unwrapped().toString()));
     }
 
 }

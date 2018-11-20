@@ -1,5 +1,6 @@
 package com.cryptobot.kafka.producer;
 
+import com.cryptobot.model.Exchange;
 import com.cryptobot.model.Ticker;
 import com.cryptobot.service.ExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class BitfinexProducer {
-    private static final String EXCHANGE = "bitfinex";
     @Autowired
     private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
@@ -35,7 +35,8 @@ public class BitfinexProducer {
 
     private List<Ticker> getTickers() {
         String path = "/tickers?symbols=ALL";
-        List<List<String>> data = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + path, List.class);
+        String url = exchangeService.getExchangeUrl(Exchange.BITFINEX) + path;
+        List<List<String>> data = restTemplate.getForObject(url, List.class);
         return getExchangeTickers(data);
     }
 
@@ -48,7 +49,7 @@ public class BitfinexProducer {
 
     private Ticker convert(List info) {
         Ticker ticker = new Ticker();
-        ticker.setExchange(EXCHANGE);
+        ticker.setExchange(Exchange.BITFINEX);
         String pair = info.get(0).toString();
         ticker.setPair(format(pair));
         ticker.setBuyPrice(PriceFormat.format(info.get(1).toString()));

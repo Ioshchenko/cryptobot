@@ -8,6 +8,7 @@ Telegram bot: [@CryptoAtlasBot](https://t.me/CryptoAtlasBot)
 
 ### List of Telegram commands:
 - `price` - show the current price for a trading pair. Example: BTC_USD
+- `user_info` - Exmo wallet info
 
 ### Exchanges:
 - EXMO
