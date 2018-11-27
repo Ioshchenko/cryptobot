@@ -1,6 +1,8 @@
 package com.cryptobot.command;
 
 import com.cryptobot.model.CommandParameters;
+import com.cryptobot.model.Exchange;
+import com.cryptobot.model.ExchangeKey;
 import com.cryptobot.model.exmo.UserInfo;
 import com.cryptobot.service.exmo.ExmoService;
 import freemarker.template.Configuration;
@@ -25,12 +27,17 @@ public class UserInfoCommand implements Command {
         try {
             Template template = freemarkerConfig.getTemplate("user_info.ftl");
             Map<String, Object> data = new HashMap<>();
-            data.put("user", exmoService.getUserInfo(parameters.getUser()));
+            Map<String, ExchangeKey> keys = parameters.getUser().getKeys();
+            if (keys.containsKey(Exchange.EXMO)) {
+                data.put("user", exmoService.getUserInfo(parameters.getUser()));
+            } else {
+                data.put("error", "error");
+            }
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, data);
         } catch (TemplateException | IOException e) {
             log.error(e);
         }
-        return "Sorry, we have some problem :(";
+        return "Sorry, we have problem with loading data from EXMO :(";
     }
 }
