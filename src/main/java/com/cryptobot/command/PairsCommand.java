@@ -24,7 +24,7 @@ public class PairsCommand implements Command {
         try {
             Template template = freemarkerConfig.getTemplate("pairs.ftl");
             Map<String, Object> data = new HashMap<>();
-            data.put("pair", parameters);
+            data.put("pair", parameters.getUserInput());
             data.put("tickers", tradingService.getTickersByPair(parameters.getUserInput()));
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, data);
         } catch (TemplateException | IOException e) {
