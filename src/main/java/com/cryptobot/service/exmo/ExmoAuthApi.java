@@ -57,8 +57,8 @@ public class ExmoAuthApi {
 
     private HttpHeaders buildHeaders(ExchangeKey exchangeKey, String postData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Key", exchangeKey.getKey());
-        headers.set("Sign", getSign(exchangeKey.getSecret(), postData));
+        headers.set("Key", exchangeKey.getExchangeKey());
+        headers.set("Sign", getSign(exchangeKey.getExchangeSecret(), postData));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         return headers;
     }
@@ -68,7 +68,7 @@ public class ExmoAuthApi {
             return new SecretKeySpec(key.getBytes(UTF_8), HMAC_SHA_512);
         } catch (UnsupportedEncodingException e) {
             log.error(e);
-            throw new IllegalArgumentException("Error create secret key");
+            throw new IllegalArgumentException("Error create exchangeSecret exchangeKey");
         }
     }
 

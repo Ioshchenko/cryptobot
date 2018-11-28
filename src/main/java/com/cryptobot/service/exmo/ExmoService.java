@@ -15,7 +15,7 @@ public class ExmoService {
     private ObjectMapper mapper = new ObjectMapper();
 
     public UserInfo getUserInfo(User user) {
-        String response = exmoAuthApi.request("/user_info", user.getKeys().get(Exchange.EXMO));
+        String response = exmoAuthApi.request("/user_info", user.getExchangeKey().get(Exchange.EXMO));
         return mapper.convertValue(response, UserInfo.class);
     }
 }

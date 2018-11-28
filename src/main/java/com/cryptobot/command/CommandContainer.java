@@ -29,7 +29,7 @@ public class CommandContainer {
         commands.put(c -> c.equalsIgnoreCase("/price"), new PriceCommand());
         commands.put(c -> c.equalsIgnoreCase("/user_info"), new UserInfoCommand(freemarkerConfig, exmoService));
         commands.put(c -> tradingService.containsPair(c), new PairsCommand(freemarkerConfig, tradingService));
-        commands.put(c->c.trim().startsWith("key"), new AddSecretKeyCommand());
+        commands.put(c->c.trim().startsWith("exchangeKey"), new AddSecretKeyCommand());
     }
 
 

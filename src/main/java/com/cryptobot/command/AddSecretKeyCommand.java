@@ -18,30 +18,31 @@ public class AddSecretKeyCommand implements Command {
 
     @Override
     public String buildMessage(CommandParameters parameters) {
-        Optional<ExchangeKey> exchangeKey = getExchangeKey(parameters.getUserInput());
+        Optional<ExchangeKey> exchangeKey = getExchangeKey(parameters);
         User user = parameters.getUser();
 
         return exchangeKey.map(k -> {
             addKeys(user, k);
             return "Keys added successfully";
         })
-                .orElse("Please input correct keys");
+                .orElse("Please input correct exchangeKey");
 
     }
 
     private void addKeys(User user, ExchangeKey k) {
-        user.getKeys().put(Exchange.EXMO, k);
-        userService.update(user);
+        user.getExchangeKey().put(Exchange.EXMO, k);
+        userService.save(user);
     }
 
-    private Optional<ExchangeKey> getExchangeKey(String userInput) {
-        Optional<String> key = getValue(KEY_PATTERN.matcher(userInput));
-        Optional<String> secret = getValue(SECRET_PATTERN.matcher(userInput));
+    private Optional<ExchangeKey> getExchangeKey(CommandParameters parameters) {
+        Optional<String> key = getValue(KEY_PATTERN.matcher(parameters.getUserInput()));
+        Optional<String> secret = getValue(SECRET_PATTERN.matcher(parameters.getUserInput()));
 
         return key.flatMap(k -> secret.map(s ->
                 ExchangeKey.builder()
-                        .key(k)
-                        .secret(s)
+                        .exchangeKey(k)
+                        .exchangeSecret(s)
+                        .user(parameters.getUser())
                         .build()));
     }
 

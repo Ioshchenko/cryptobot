@@ -5,3 +5,13 @@ spring:
   mvc:
     view:
       suffix: .html
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/botdb?useSSL=false
+    username: admin
+    password: admin
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
