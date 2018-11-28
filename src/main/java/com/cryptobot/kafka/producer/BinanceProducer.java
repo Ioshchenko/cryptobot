@@ -1,5 +1,6 @@
 package com.cryptobot.kafka.producer;
 
+import com.cryptobot.model.Exchange;
 import com.cryptobot.model.Ticker;
 import com.cryptobot.service.ExchangeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
 @Component
 public class BinanceProducer {
 
-    private static final String EXCHANGE = "binance";
     @Autowired
     private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
@@ -36,7 +36,8 @@ public class BinanceProducer {
 
     private List<Ticker> getTickers() {
 
-        List<Map<String, String>> tickers = restTemplate.getForObject(exchangeService.getExchangeUrl(EXCHANGE) + "/v3/ticker/price", List.class);
+        String url = exchangeService.getExchangeUrl(Exchange.BINANCE);
+        List<Map<String, String>> tickers = restTemplate.getForObject(url + "/v3/ticker/price", List.class);
         return tickers.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -45,7 +46,7 @@ public class BinanceProducer {
     private Ticker convert(Map<String, String> info) {
         Ticker ticker = new Ticker();
         ticker.setBuyPrice(PriceFormat.format(info.get("price")));
-        ticker.setExchange(EXCHANGE);
+        ticker.setExchange(Exchange.BINANCE);
         ticker.setPair(format(info.get("symbol")));
         return ticker;
     }

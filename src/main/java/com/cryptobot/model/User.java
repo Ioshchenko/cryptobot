@@ -1,0 +1,25 @@
+package com.cryptobot.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "user")
+public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private long telegramId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
+    private Map<String, ExchangeKey> exchangeKey = new HashMap<>();
+
+}

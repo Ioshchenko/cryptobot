@@ -1,11 +1,7 @@
 package com.cryptobot.model;
 
-import lombok.Builder;
-import lombok.Getter;
-
-@Getter
-@Builder
 public class Exchange {
-    private String name;
-    private String url;
+    public static final String BINANCE = "binance";
+    public static final String EXMO = "exmo";
+    public static final String BITFINEX = "bitfinex";
 }
