@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 @AllArgsConstructor
 public class AddSecretKeyCommand implements Command {
-    private static final Pattern KEY_PATTERN = Pattern.compile("(?<=key:)(\\S+)");
-    private static final Pattern SECRET_PATTERN = Pattern.compile("(?<=secret:)(\\S+)");
+    private static final Pattern KEY_PATTERN = Pattern.compile("(?<=key:)\\s*(\\S+)");
+    private static final Pattern SECRET_PATTERN = Pattern.compile("(?<=secret:)\\s*(\\S+)");
 
     private UserService userService;
 
