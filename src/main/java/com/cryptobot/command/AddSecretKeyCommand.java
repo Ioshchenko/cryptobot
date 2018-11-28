@@ -5,11 +5,13 @@ import com.cryptobot.model.Exchange;
 import com.cryptobot.model.ExchangeKey;
 import com.cryptobot.model.User;
 import com.cryptobot.service.UserService;
+import lombok.AllArgsConstructor;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@AllArgsConstructor
 public class AddSecretKeyCommand implements Command {
     private static final Pattern KEY_PATTERN = Pattern.compile("(?<=key:)(\\S+)");
     private static final Pattern SECRET_PATTERN = Pattern.compile("(?<=secret:)(\\S+)");
@@ -25,7 +27,7 @@ public class AddSecretKeyCommand implements Command {
             addKeys(user, k);
             return "Keys added successfully";
         })
-                .orElse("Please input correct exchangeKey");
+                .orElse("Please input correct key/secret");
 
     }
 

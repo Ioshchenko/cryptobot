@@ -41,9 +41,8 @@ public class TelegramController {
         RequestMessage message = new RequestMessage();
         message.setChatId(responseMessage.getChat().getId());
         message.setReplyToMessageId(responseMessage.getMessageId());
-        String userInput = responseMessage.getText().toUpperCase();
         CommandParameters parameters = CommandParameters.builder()
-                .userInput(userInput)
+                .userInput(responseMessage.getText())
                 .user(userService.getUserByTelegramId(responseMessage.getFrom().getId()))
                 .build();
 
