@@ -1,6 +1,7 @@
 package com.cryptobot.controller;
 
 import com.cryptobot.model.CommandParameters;
+import com.cryptobot.model.User;
 import com.cryptobot.model.telegram.RequestMessage;
 import com.cryptobot.model.telegram.ResponseMessage;
 import com.cryptobot.model.telegram.UpdateEntity;
@@ -43,12 +44,22 @@ public class TelegramController {
         message.setReplyToMessageId(responseMessage.getMessageId());
         CommandParameters parameters = CommandParameters.builder()
                 .userInput(responseMessage.getText())
-                .user(userService.getUserByTelegramId(responseMessage.getFrom().getId()))
+                .user(getOrInitUser(responseMessage))
                 .build();
 
         message.setText(messageService.buildTextMessage(parameters));
         message.setParseMode("HTML");
         return message;
+    }
+
+    private User getOrInitUser(ResponseMessage responseMessage) {
+        int telegramId = responseMessage.getFrom().getId();
+        User user = userService.getUserByTelegramId(telegramId);
+        if (user == null) {
+            user = new User();
+            user.setTelegramId(telegramId);
+        }
+        return user;
     }
 
 

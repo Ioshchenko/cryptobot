@@ -40,12 +40,13 @@ public class AddSecretKeyCommand implements Command {
         Optional<String> key = getValue(KEY_PATTERN.matcher(parameters.getUserInput()));
         Optional<String> secret = getValue(SECRET_PATTERN.matcher(parameters.getUserInput()));
 
-        return key.flatMap(k -> secret.map(s ->
-                ExchangeKey.builder()
-                        .exchangeKey(k)
-                        .exchangeSecret(s)
-                        .user(parameters.getUser())
-                        .build()));
+        return key.flatMap(k -> secret.map(s -> {
+            ExchangeKey exchangeKey = new ExchangeKey();
+            exchangeKey.setExchangeKey(k);
+            exchangeKey.setExchangeSecret(s);
+            exchangeKey.setUser(parameters.getUser());
+            return exchangeKey;
+        }));
     }
 
     private Optional<String> getValue(Matcher matcher) {

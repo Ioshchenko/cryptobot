@@ -27,10 +27,9 @@ public class ExmoAuthApi {
 
     private static final String HMAC_SHA_512 = "HmacSHA512";
     private static final String UTF_8 = "UTF-8";
-    private long nonce = 1;
+    private long nonce = 220;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private ExchangeService exchangeService;
 
