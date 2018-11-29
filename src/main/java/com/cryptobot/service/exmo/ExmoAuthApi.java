@@ -2,6 +2,7 @@ package com.cryptobot.service.exmo;
 
 import com.cryptobot.model.Exchange;
 import com.cryptobot.model.ExchangeKey;
+import com.cryptobot.model.exmo.UserInfo;
 import com.cryptobot.service.ExchangeService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
@@ -27,17 +28,17 @@ public class ExmoAuthApi {
 
     private static final String HMAC_SHA_512 = "HmacSHA512";
     private static final String UTF_8 = "UTF-8";
-    private long nonce = 220;
+    private long nonce = 223;
 
     private RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private ExchangeService exchangeService;
 
-    public String request(String method, ExchangeKey exchangeKey) {
-        return request(method, exchangeKey, new HashMap<>());
+    public Object request(String method, ExchangeKey exchangeKey, Class clazz) {
+        return request(method, exchangeKey, clazz, new HashMap<>());
     }
 
-    public String request(String method, ExchangeKey exchangeKey, Map<String, String> arguments) {
+    public Object request(String method, ExchangeKey exchangeKey,Class clazz, Map<String, String> arguments) {
         arguments.put("nonce", String.valueOf(nonce++));
 
         String postData = buildData(arguments);
@@ -45,7 +46,7 @@ public class ExmoAuthApi {
         HttpEntity entity = new HttpEntity(postData, headers);
 
         String url = exchangeService.getExchangeUrl(Exchange.EXMO) + method;
-        return restTemplate.postForObject(url, entity, String.class);
+        return restTemplate.postForObject(url, entity, clazz);
     }
 
     private String buildData(Map<String, String> arguments) {
