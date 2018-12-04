@@ -3,8 +3,8 @@
     <#if user.balances??>
     <i>balance:</i>
     <#list user.balances?keys as key>
-        <#assign value=user.balances[key]>
-        <#if value > 0.00001 >
+        <#assign value = user.balances[key]>
+        <#if (value > 0.00001) >
             ${key} = ${value}
         </#if>
     </#list>
