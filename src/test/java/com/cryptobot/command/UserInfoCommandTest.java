@@ -46,7 +46,7 @@ class UserInfoCommandTest {
     }
 
     @Test
-    void shouldBuildMessage() {
+    void shouldBuildBMessage() {
         User user = new User();
         user.setExchangeKey(getExmoExchangeKey());
         CommandParameters parameters = CommandParameters.builder().user(user).build();
@@ -57,7 +57,8 @@ class UserInfoCommandTest {
         command = new UserInfoCommand(config, exmoService);
         String message = command.buildMessage(parameters);
 
-        assertTrue(message.contains("USD = 200.52"));
+        assertTrue(message.contains("USD = 200.52"), "Balance not present");
+        assertTrue(message.contains("BTC = 0.34"), "Reserved not present");
     }
 
     private UserInfo getUserInfo() {
@@ -65,6 +66,10 @@ class UserInfoCommandTest {
         Map<String, Double> balances = new HashMap<>();
         balances.put("USD", 200.52);
         userInfo.setBalances(balances);
+
+        Map<String, Double> reserved = new HashMap<>();
+        reserved.put("BTC", 0.34);
+        userInfo.setReserved(reserved);
         return userInfo;
     }
 
