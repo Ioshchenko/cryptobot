@@ -2,7 +2,8 @@ package com.cryptobot.service.exmo;
 
 import com.cryptobot.model.Exchange;
 import com.cryptobot.model.ExchangeKey;
-import com.cryptobot.model.exmo.UserInfo;
+import com.cryptobot.model.ExmoIndex;
+import com.cryptobot.repository.ExmoRepository;
 import com.cryptobot.service.ExchangeService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
@@ -20,6 +21,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -28,18 +30,22 @@ public class ExmoAuthApi {
 
     private static final String HMAC_SHA_512 = "HmacSHA512";
     private static final String UTF_8 = "UTF-8";
-    private long nonce = 223;
+    private long exmoIndex = 1;
 
     private RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private ExchangeService exchangeService;
 
+    @Autowired
+    private ExmoRepository exmoRepository;
+
     public Object request(String method, ExchangeKey exchangeKey, Class clazz) {
         return request(method, exchangeKey, clazz, new HashMap<>());
     }
 
-    public Object request(String method, ExchangeKey exchangeKey,Class clazz, Map<String, String> arguments) {
-        arguments.put("nonce", String.valueOf(nonce++));
+    public Object request(String method, ExchangeKey exchangeKey, Class clazz, Map<String, Object> arguments) {
+        ExmoIndex index = getExmoIndex();
+        arguments.put("nonce", String.valueOf(index.getNone()));
 
         String postData = buildData(arguments);
         HttpHeaders headers = buildHeaders(exchangeKey, postData);
@@ -49,7 +55,15 @@ public class ExmoAuthApi {
         return restTemplate.postForObject(url, entity, clazz);
     }
 
-    private String buildData(Map<String, String> arguments) {
+    private ExmoIndex getExmoIndex() {
+        Optional<ExmoIndex> exmoIndex = exmoRepository.findById(this.exmoIndex);
+        ExmoIndex index = exmoIndex.orElse(new ExmoIndex());
+        index.setNone(index.getNone() + 1);
+        exmoRepository.save(index);
+        return index;
+    }
+
+    private String buildData(Map<String, Object> arguments) {
         return arguments.entrySet().stream()
                 .map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.joining("&"));

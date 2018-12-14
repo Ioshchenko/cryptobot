@@ -1,16 +1,13 @@
 package com.cryptobot.service;
 
+import com.cryptobot.strategy.ArbitrageCryptoStrategy;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ArbitrageCryptoServiceTest {
+class ArbitrageCryptoStrategyTest {
 
-    private ArbitrageCryptoService service = new ArbitrageCryptoService();
+    private ArbitrageCryptoStrategy service = new ArbitrageCryptoStrategy();
 
     @Test
     void shouldSelectPairs() {
@@ -20,9 +17,9 @@ class ArbitrageCryptoServiceTest {
 //        tickers.put("XMR_BTC", 0.09);
 //        tickers.put("ETH_USD", 400.0);
 //
-//        List<String> process = service.process(tickers);
+//        List<String> getProfitPairs = service.getProfitPairs(tickers);
 //
-//        assertEquals(1, process.size());
+//        assertEquals(1, getProfitPairs.size());
     }
 
 }

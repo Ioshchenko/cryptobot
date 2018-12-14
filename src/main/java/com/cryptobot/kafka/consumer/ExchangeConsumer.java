@@ -2,7 +2,7 @@ package com.cryptobot.kafka.consumer;
 
 import com.cryptobot.model.Exchange;
 import com.cryptobot.model.Ticker;
-import com.cryptobot.service.ArbitrageCryptoService;
+import com.cryptobot.strategy.ArbitrageCryptoStrategy;
 import com.cryptobot.service.TradingService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ public class ExchangeConsumer {
     private TradingService tradingService;
 
     @Autowired
-    private ArbitrageCryptoService arbitrageCryptoService;
+    private ArbitrageCryptoStrategy arbitrageCryptoStrategy;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -36,9 +36,8 @@ public class ExchangeConsumer {
                 = mapper.convertValue(data, new TypeReference<List<Ticker>>() {
         });
         Ticker ticker = tickers.get(0);
-        if (ticker.getExchange().equals(Exchange.EXMO)) {
-            List<String> process = arbitrageCryptoService.process(tickers);
-            process.forEach(log::info);
+        if (ticker.getExchange().equals(Exchange.BITFINEX)) {
+            arbitrageCryptoStrategy.start(tickers);
         }
         tradingService.update(tickers);
         template.convertAndSend("/topic/exchange", data);

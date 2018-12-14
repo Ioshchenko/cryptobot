@@ -1,12 +1,12 @@
 kafka:
-  topic: demo
+  topic: test
   group: exchanges
 spring:
   mvc:
     view:
       suffix: .html
   datasource:
-    url: jdbc:mysql://mysql:3306/botdb?useSSL=false
+    url: jdbc:mysql://localhost:3306/botdb?useSSL=false
     username: admin
     password: admin
   jpa:
