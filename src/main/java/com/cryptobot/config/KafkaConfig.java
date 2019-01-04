@@ -1,6 +1,7 @@
 package com.cryptobot.config;
 
 import com.cryptobot.model.Ticker;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 @Configuration
 @EnableKafka
 public class KafkaConfig {
@@ -57,7 +59,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 250);
-        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG,600000);
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 600000);
         props.put("security.protocol", "SASL_SSL");
         props.put("sasl.mechanism", "SCRAM-SHA-256");
         props.put("sasl.jaas.config", getJaas());

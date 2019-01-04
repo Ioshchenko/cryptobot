@@ -18,7 +18,7 @@ public class User implements Serializable {
     private long id;
     private long telegramId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Map<String, ExchangeKey> exchangeKey = new HashMap<>();
 
 }

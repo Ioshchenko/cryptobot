@@ -11,11 +11,15 @@ public class UserService {
     private UserRepository userRepository;
 
     public User getUserByTelegramId(int id) {
-         return userRepository.findByTelegramId(id);
+        return userRepository.findByTelegramId(id);
 
     }
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public User getDefaultUser() {
+        return getUserByTelegramId(Integer.valueOf(System.getenv("DEFAULT_USER_ID")));
     }
 }

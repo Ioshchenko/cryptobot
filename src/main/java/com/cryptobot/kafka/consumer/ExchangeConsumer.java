@@ -1,6 +1,8 @@
-package com.cryptobot.kafka;
+package com.cryptobot.kafka.consumer;
 
+import com.cryptobot.model.Exchange;
 import com.cryptobot.model.Ticker;
+import com.cryptobot.strategy.ArbitrageCryptoStrategy;
 import com.cryptobot.service.TradingService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,12 +25,21 @@ public class ExchangeConsumer {
     @Autowired
     private TradingService tradingService;
 
+    @Autowired
+    private ArbitrageCryptoStrategy arbitrageCryptoStrategy;
+
     private ObjectMapper mapper = new ObjectMapper();
 
     @KafkaListener(topics = "#{topic.toString()}")
-    public void listen(List<LinkedHashMap<String, String>> tickers) {
-        tradingService.update(mapper.convertValue(tickers, new TypeReference<List<Ticker>>() {
-        }));
-        template.convertAndSend("/topic/exchange", tickers);
+    public void receive(List<LinkedHashMap<String, String>> data) {
+        List<Ticker> tickers
+                = mapper.convertValue(data, new TypeReference<List<Ticker>>() {
+        });
+        Ticker ticker = tickers.get(0);
+        if (ticker.getExchange().equals(Exchange.BITFINEX)) {
+            arbitrageCryptoStrategy.start(tickers);
+        }
+        tradingService.update(tickers);
+        template.convertAndSend("/topic/exchange", data);
     }
 }

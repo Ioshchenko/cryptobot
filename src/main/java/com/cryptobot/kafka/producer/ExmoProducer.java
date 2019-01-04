@@ -1,13 +1,12 @@
 package com.cryptobot.kafka.producer;
 
 import com.cryptobot.model.Exchange;
-import com.cryptobot.service.ExchangeService;
 import com.cryptobot.model.Ticker;
+import com.cryptobot.service.exmo.ExmoApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,13 +19,10 @@ public class ExmoProducer {
     private KafkaTemplate<String, List<Ticker>> kafkaTemplate;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private ExmoApi exmoApi;
 
     @Resource(name = "topic")
     private String topic;
-
-    @Autowired
-    private ExchangeService exchangeService;
 
     @Scheduled(fixedRate = 2000)
     public void loadData() {
@@ -34,8 +30,7 @@ public class ExmoProducer {
     }
 
     private List<Ticker> getTickers() {
-        String url = exchangeService.getExchangeUrl(Exchange.EXMO);
-        Map<String, Map<String, String>> tickers = restTemplate.getForObject(url + "/ticker/", Map.class);
+        Map<String, Map<String, String>> tickers = exmoApi.getTickers();
         return tickers.entrySet().stream()
                 .map(e -> convert(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
